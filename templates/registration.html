@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Registrators
+{% endblock %}
+
+{% block body %}
+    <h1>Registered Accounts</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <th scope="col">User</th>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <th scope="row">{{ registration.id }}</th>
+                <td>{{ registration.name }}</td>
+                <td>{{ registration.username }}</td>
+                <td>{{ registration.password }}</td>
+                <td><a href="{{ url_for('name', name.id=name.id) }}" class="btn btn-info" role="button">User Accounts</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
