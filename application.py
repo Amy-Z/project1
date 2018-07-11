@@ -6,30 +6,39 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_login import LoginManager, UserMixin, current_user, login_user
 
-
 app = Flask(__name__)
+
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
+
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
 
 @app.route("/")
 def home():
     return render_template("home.html")
 
+
 @app.route("/index")
 def index():
+
+    # if not session.get("logged_in")
+    # return render_template(login.html)
+
     registration = db.execute("SELECT * FROM registration").fetchall()
     return render_template("index.html", registration=registration)
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -42,6 +51,7 @@ def register():
     # hashpassword = generate_password_hash(p)
     db.commit()
     return render_template("login.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -58,14 +68,26 @@ def login():
 
 @app.route("/search", methods=["POST"])
 def search():
-    zips = request.form.get('zipcode')
-    # locations = db.execute('SELECT * from locations')
-    locations = db.execute("SELECT * FROM locations WHERE zipcode = '%s'" % zips)
+    usrinput = str(request.form.get('zipcode'))
+    locations = db.execute("SELECT * FROM locations WHERE zipcode LIKE '" + usrinput.upper() + "%' OR city LIKE '" + usrinput.upper() + "%'")
+    ZipAndCity=[dict(zipcode=row[1],
+                    city=row[2]) for row in locations.fetchall()]
+    return render_template("search.html", zipcode=ZipAndCity)
 
-    # if db.execute("SELECT zipcode FROM locations WHERE zipcode = '%s'" % zips).rowcount==1:
-    # if db.execute("SELECT zipcode FROM locations WHERE zipcode = '%s'" % zips).rowcount==1:
-    Zipcode=[dict(zipcode=row[1]) for row in locations.fetchall()]
-    return render_template("search.html", zipcode=Zipcode)
+
+@app.route("/location", methods=["POST"])
+def location():
+    return render_template("location.html", locations=locations)
+
+
+
+# @app.route("/logout")
+# def logout():
+#     session["logged_in"] = False
+#     return home()
+
+
+
 
 # @app.route('/login', methods=['POST'])
 # def login():
@@ -111,3 +133,4 @@ if __name__ == '__main__':
     #    registration = str(request.form.get("registration"))
     #except NameError:
     #    return render_template("error.html", message="Invalid information.")
+

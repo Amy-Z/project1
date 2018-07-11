@@ -6,11 +6,10 @@
 {% block body %}
 
 <div class="form-group">
-    <button class="btn btn-info">Register</button>
-</div>
+<form action="{{ url_for('index') }}" method="post">
+    <button class="btn btn-info" type="submit">Register</button>
 
-<div class="form-group">
-    <button class="btn btn-info">Login</button>
+    <button class="btn btn-info" type="login">Login</button>
+</form>
 </div>
-
 {% endblock %}

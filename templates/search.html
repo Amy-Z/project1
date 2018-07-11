@@ -9,16 +9,49 @@
       <form action="{{ url_for('search') }}" method="post">
         <input type="text" placeholder="search" name="zipcode" value="">
         <input class="btn btn-default" type="submit" value="Search">
-
-      <h4>Zipcodes</h4>
-      {% for zipcode in zipcode %}
-          {{zipcode.zipcode}}
-      {% endfor %}
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-
+        <br>
+        <table class="table table-striped">
+          <thead>
+            <th scope="col">Zipcode</th>
+            <th scope="col">City</th>
+            <th scope="col">More Info...</th>
+          </thead>
+          <tr>
+            <td>
+              {% for zipcode in zipcode %}
+                {% if zipcode == None %}
+                  <p>No Results Found.</p>
+                {% else %}
+                  {{zipcode.zipcode}}
+                  <br>
+                {% endif %}
+              {% endfor %}
+            </td>
+            <td>
+              {% for zipcode in zipcode %}
+                {% if zipcode == None %}
+                  <p>No Results Found.</p>
+                {% else %}
+                  {{zipcode.city}}
+                  <br>
+                {% endif %}
+              {% endfor %}
+            </td>
+            <td>
+              {% for zipcode in zipcode %}
+                {% if zipcode == None %}
+                  <p>No Results Found.</p>
+                {% else %}
+                  <a href="{{ url_for('location', zipcode=zipcode) }}" class="btn btn-info" role="button">More...</a>
+                  <br>
+                {% endif %}
+              {% endfor %}
+            </td>
+          </tr>
+        </table>
     </form>
     </div>
 {% endblock %}
 
+
+<!-- <a href="location.html\"{{zipcode.zipcode}}> -->

@@ -11,6 +11,7 @@ if not os.getenv("DATABASE_URL"):
 
 with open('zips.csv', newline='') as csvfile:
     readCSV = csv.reader(csvfile, delimiter=',')
+    next(readCSV, None)
     for row in readCSV:
         db.execute("INSERT INTO locations (zipcode, city, state, lat, long, population) VALUES (:zipcode, :city, :state, :lat, :long, :population)",
             {"zipcode": row[0], "city": row[1], "state": row[2], "lat": row[3], "long": row[4], "population": row[5]})
