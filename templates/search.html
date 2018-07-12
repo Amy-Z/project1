@@ -4,54 +4,31 @@
 {% endblock %}
 {% block body %}
 
-    <div class="container">
-      <br>
-      <form action="{{ url_for('search') }}" method="post">
-        <input type="text" placeholder="search" name="zipcode" value="">
-        <input class="btn btn-default" type="submit" value="Search">
-        <br>
-        <table class="table table-striped">
-          <thead>
-            <th scope="col">Zipcode</th>
-            <th scope="col">City</th>
-            <th scope="col">More Info...</th>
-          </thead>
-          <tr>
-            <td>
-              {% for zipcode in zipcode %}
-                {% if zipcode == None %}
-                  <p>No Results Found.</p>
-                {% else %}
-                  {{zipcode.zipcode}}
-                  <br>
-                {% endif %}
-              {% endfor %}
-            </td>
-            <td>
-              {% for zipcode in zipcode %}
-                {% if zipcode == None %}
-                  <p>No Results Found.</p>
-                {% else %}
-                  {{zipcode.city}}
-                  <br>
-                {% endif %}
-              {% endfor %}
-            </td>
-            <td>
-              {% for zipcode in zipcode %}
-                {% if zipcode == None %}
-                  <p>No Results Found.</p>
-                {% else %}
-                  <a href="{{ url_for('location', zipcode=zipcode) }}" class="btn btn-info" role="button">More...</a>
-                  <br>
-                {% endif %}
-              {% endfor %}
-            </td>
-          </tr>
-        </table>
-    </form>
+  <form action="{{ url_for('search') }}" method="post">
+    <div class="form-group">
+      <input class="form-control" placeholder="search" name="search">
     </div>
+    <div class="form-group">
+      <button class="btn btn-default">Search</button>
+    </div>
+  </form>
+  <table class="table table-striped">
+    <thead>
+      <th scope="col">Zipcode</th>
+      <th scope="col">City</th>
+      <th scope="col">More Info...</th>
+    </thead>
+    <tbody>
+    {% for codes in locations %}
+      <tr>
+        <td>{{ codes.zipcode }}</td>
+        <td>{{ codes.city }}</td>
+        <td><a href="{{ url_for('location', zipcode=codes.zipcode) }}" class="btn btn-info" role="button">More...</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
 {% endblock %}
 
 
-<!-- <a href="location.html\"{{zipcode.zipcode}}> -->
